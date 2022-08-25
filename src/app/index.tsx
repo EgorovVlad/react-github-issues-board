@@ -10,7 +10,7 @@ export type AppProps = {};
 
 export const App: React.VFC<AppProps> = () => {
   return (
-    <div className="container-xxl p-4">
+    <div className="container-xxl h-100 p-4">
       <GithubDropBoardProvider>
         <GithubDropBoardSearch className="mb-4" />
         <GithubDropBoardBreadcrumb className="pb-1" />
