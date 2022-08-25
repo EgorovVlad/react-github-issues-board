@@ -21,7 +21,7 @@ export const GithubDropBoardSearch: React.VFC<GithubDropBoardSearchProps> = ({
 
   return (
     <GithubRepoSearch
-      defaultURL={window.history.state.link}
+      defaultURL={window.history.state?.link}
       className={className}
       disabled={isLoading}
       onClickLoad={onClickLoad}
