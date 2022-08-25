@@ -1,9 +1,9 @@
 import { useContext, createContext, PropsWithChildren } from "react";
 
 export const createContextHook = <
-  F extends (payload: any) => any,
-  P extends Parameters<F>[0],
-  R extends ReturnType<F>
+  F extends (payload: object) => any,
+  P extends Parameters<F>[0] extends object ? Parameters<F>[0] : {},
+  R extends ReturnType<F>,
 >(
   useHook: F
 ) => {
