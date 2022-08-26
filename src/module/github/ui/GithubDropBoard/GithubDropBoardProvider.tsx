@@ -30,7 +30,12 @@ export const [useGithubDropBoard, GithubDropBoardProvider] = createContextHook(
 
     const onReload = useCallback(
       (payload: Pick<GetIssuesPayload, "owner" | "repo">) => {
-        setBoardKey({ owner: payload.owner, repo: payload.repo });
+        setBoardKey((prev) => {
+          if (prev.owner !== payload.owner || prev.repo !== payload.repo) {
+            setBoard(BOARD_STATE);
+          }
+          return { owner: payload.owner, repo: payload.repo };
+        });
       },
       []
     );
@@ -69,7 +74,7 @@ export const [useGithubDropBoard, GithubDropBoardProvider] = createContextHook(
     );
 
     useEffect(() => {
-      if (!boardKey.owner || !boardKey.repo) return setBoard(BOARD_STATE);
+      if (!boardKey.owner || !boardKey.repo) return;
 
       const boardCache = getBoardCache({
         owner: boardKey.owner,
@@ -100,7 +105,9 @@ export const [useGithubDropBoard, GithubDropBoardProvider] = createContextHook(
       });
 
       const updateBoardCache = () => {
-        boardShadow.current && setBoardCache(boardKey, boardShadow.current);
+        if (!boardShadow.current) return;
+        setBoardCache(boardKey, boardShadow.current);
+        boardShadow.current = undefined;
       };
       window.addEventListener("beforeunload", updateBoardCache);
 
