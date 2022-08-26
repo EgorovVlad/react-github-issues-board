@@ -79,7 +79,6 @@ export const [useGithubDropBoard, GithubDropBoardProvider] = createContextHook(
       pages.reload({
         owner: boardKey.owner,
         repo: boardKey.repo,
-        page: 1,
         perPage: 100,
       });
 
