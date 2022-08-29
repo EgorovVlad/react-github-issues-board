@@ -1,3 +1,4 @@
+import { useCallback } from "react";
 import { useGithubDropBoard } from "./GithubDropBoardProvider";
 import { GithubRepoSearch, GithubRepoSearchProps } from "../GithubRepoSearch";
 
@@ -10,14 +11,13 @@ export const GithubDropBoardSearch: React.VFC<GithubDropBoardSearchProps> = ({
 }) => {
   const { onReload, isLoading } = useGithubDropBoard();
 
-  const onClickLoad: GithubRepoSearchProps["onClickLoad"] = (
-    link,
-    owner,
-    repo
-  ) => {
-    window.history.replaceState({ link }, "");
-    onReload({ owner, repo });
-  };
+  const onClickLoad: GithubRepoSearchProps["onClickLoad"] = useCallback(
+    (link, owner, repo) => {
+      window.history.replaceState({ link }, "");
+      onReload({ owner, repo });
+    },
+    [onReload]
+  );
 
   return (
     <GithubRepoSearch

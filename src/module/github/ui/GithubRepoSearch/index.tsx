@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { memo, useEffect, useRef, useState } from "react";
 
 import Form from "react-bootstrap/esm/Form";
 import Button from "react-bootstrap/esm/Button";
@@ -16,52 +16,52 @@ export type GithubRepoSearchProps = {
   onClickLoad?: (url: string, owner: string, repo: string) => void;
 };
 
-export const GithubRepoSearch: React.VFC<GithubRepoSearchProps> = ({
-  defaultURL,
-  disabled,
-  className,
-  onClickLoad,
-}) => {
-  const [url, setUrl] = useState<string>("");
-  const buttonRef = useRef<HTMLButtonElement>(null);
+export const GithubRepoSearch: React.VFC<GithubRepoSearchProps> = memo(
+  ({ defaultURL, disabled, className, onClickLoad }) => {
+    const [url, setUrl] = useState<string>("");
+    const buttonRef = useRef<HTMLButtonElement>(null);
 
-  const onClick: React.FormEventHandler<HTMLFormElement> = (e) => {
-    e.preventDefault();
-    if (!onClickLoad) return;
+    const onClick: React.FormEventHandler<HTMLFormElement> = (e) => {
+      e.preventDefault();
+      if (!onClickLoad) return;
 
-    const match = REPO_REGEX.exec(url);
-    if (!match) return throwErrorToast({ title: "URL should contains repository path!" });
+      const match = REPO_REGEX.exec(url);
+      if (!match)
+        return throwErrorToast({
+          title: "URL should contains repository path!",
+        });
 
-    const [, owner, repo] = match[0].split("/");
-    onClickLoad(url, owner, repo);
-  };
+      const [, owner, repo] = match[0].split("/");
+      onClickLoad(url, owner, repo);
+    };
 
-  useEffect(() => {
-    if (typeof defaultURL === "string") {
-      setUrl(defaultURL);
-      setTimeout(() => buttonRef.current?.click(), 200);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    useEffect(() => {
+      if (typeof defaultURL === "string") {
+        setUrl(defaultURL);
+        setTimeout(() => buttonRef.current?.click(), 200);
+      }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
-  return (
-    <form onSubmit={onClick} className={cn("d-flex gap-3", className)}>
-      <InputGroup size="lg">
-        <Form.Control
+    return (
+      <form onSubmit={onClick} className={cn("d-flex gap-3", className)}>
+        <InputGroup size="lg">
+          <Form.Control
+            disabled={disabled}
+            value={url}
+            placeholder="Repo URL"
+            onChange={ejectEventValue(setUrl)}
+          />
+        </InputGroup>
+        <Button
+          ref={buttonRef}
+          type="submit"
           disabled={disabled}
-          value={url}
-          placeholder="Repo URL"
-          onChange={ejectEventValue(setUrl)}
+          variant="primary"
+          className="text-nowrap"
+          children="Load Issues"
         />
-      </InputGroup>
-      <Button
-        ref={buttonRef}
-        type="submit"
-        disabled={disabled}
-        variant="primary"
-        className="text-nowrap"
-        children="Load Issues"
-      />
-    </form>
-  );
-};
+      </form>
+    );
+  }
+);

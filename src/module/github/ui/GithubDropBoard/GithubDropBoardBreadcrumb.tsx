@@ -1,7 +1,5 @@
 import { useGithubDropBoard } from "./GithubDropBoardProvider";
-import Breadcrumb from "react-bootstrap/esm/Breadcrumb";
-
-import cn from "classnames";
+import { GithubRepoBreadcrumb } from "../GithubRepoBreadcrumb";
 
 export type GithubDropBoardBreadcrumbProps = {
   className?: string;
@@ -15,19 +13,7 @@ export const GithubDropBoardBreadcrumb: React.VFC<
   } = useGithubDropBoard();
 
   if (!owner || !repo) return null;
-
   return (
-    <Breadcrumb className={cn("fw-bold h4", className)}>
-      <Breadcrumb.Item
-        target="_blank"
-        href={`https://github.com/${owner}`}
-        children={owner}
-      />
-      <Breadcrumb.Item
-        target="_blank"
-        href={`https://github.com/${owner}/${repo}`}
-        children={repo}
-      />
-    </Breadcrumb>
+    <GithubRepoBreadcrumb owner={owner} repo={repo} className={className} />
   );
 };
